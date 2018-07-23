@@ -16,17 +16,17 @@ export default class App extends Component {
 
     this.state = {
       active: false,
-      startDate: moment(),
+      startDate: Moment(),
       timeRemaining: {
         days: 0,
-        hours:0,
+        hours: 0,
         minutes: 0,
         seconds: 0
       },
       age: 0
-    }
+    };
 
-    this.handleGenerate = this.handleGenerate.bind(this)
+    this.handleGenerate = this.handleGenerate.bind(this);
   }
 
   handleChange = function(date) {
@@ -34,9 +34,10 @@ export default class App extends Component {
     this.setState({
       startDate: date
     });
-  }.bind(this)
+  }.bind(this);
 
   handleGenerate = function() {
+    clearInterval(this.timer)
 
     var bday = this.state.startDate.toDate();
     var today = new Date(); 
@@ -62,24 +63,25 @@ export default class App extends Component {
       if(birthDay > currentDay) {
         bday.setFullYear(today.getFullYear())
       } 
-      if(birthDay <= currentDay() + 1) {
+      if(birthDay <= currentDay) {
+        bday.setFullYear(today.getFullYear() + 1)
+      }
+    }
+    
 
-      }
-      }
     var countDownDate = bday.getTime();
 
      this.timer = setInterval(function() {
 
-    var now = today.getTime();
-
+      var now = Moment().toDate().getTime();
     var distance = countDownDate - now;
 
     var days = Math.floor(distance / (1000 * 60 * 60 * 24));
     var hours = Math.floor(
-      (distance / (1000 * 60 * 60 * 24)) / (1000*60*60)
+      (distance / (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
     );
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000*60));
-    var seconds = Math.floor((distance %  (1000*60)) / 1000);
+    var seconds = Math.floor((distance %  (1000 * 60)) / 1000);
     
     const time = days + "d " +  hours + "h " + minutes + "m " + seconds + "s ";
     const timeRemaining = {
@@ -97,9 +99,9 @@ export default class App extends Component {
   }.bind(this), 1000);
 }.bind(this);
 
-getBirthdate = function() {
+getBirthdate = function(date) {
 const month = date.getMonth() +1;
-const days = date.getDate();
+const day = date.getDate();
 if(month < 10) {
   return `0${month}/${day}` 
 }
@@ -115,18 +117,19 @@ return `${month}/${day}`
     <label key={3} className="grid__remaining">
     Remain until you turn {this.state.age}
     </label>
-  ] 
+  ]; 
 
 } else { 
   return [
-  <Picker startDate={this.state.startDate}
+  <Picker 
+  startDate={this.state.startDate}
   callback={(date) => this.handleChange(date)}
   key={0}
   />,
 Button("Generate Countdown", () => this.handleGenerate())
-]
+];
 }
-  }.bind(this)
+  }.bind(this);
 
   render() {
 
